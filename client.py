@@ -2,7 +2,7 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
-from Designs.design1 import Ui_MainWindow
+from Designs.design2 import Ui_MainWindow
 import sys
 
 
@@ -42,17 +42,21 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 break
 
     def send(self):
-        #self.ui.label.setText("Hello")
         msg = self.ui.textEdit.toPlainText()
         self.client_socket.send(bytes(msg, "utf8"))
-        if msg == "{quit}":
-            self.client_socket.close()
+    
+    def close_sockets(self):
+        self.client_socket.close()
+
+    def closeEvent(self, event):
+        self.close_sockets()
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     application = ApplicationWindow()
     application.show()
     sys.exit(app.exec_())
+    application.close_sockets()
 
 if __name__ == "__main__":
     main()
