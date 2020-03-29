@@ -3,6 +3,8 @@ from threading import Thread
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
 from Designs.design2 import Ui_MainWindow
+from PyQt5.QtCore import Qt
+from PyQt5 import QtCore
 import sys
 
 
@@ -13,7 +15,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.send)
-
+        self.ui.textEdit.installEventFilter(self)
         self.HOST = "127.0.0.1"
         if self.HOST == "":
             self.HOST = "127.0.0.1"
@@ -46,6 +48,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.client_socket.send(bytes(msg, "utf8"))
         self.ui.textEdit.setText("")
     
+    def eventFilter(self, obj, event):
+        if event.type() == QtCore.QEvent.KeyPress and obj is self.ui.textEdit:
+            if (event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter) and self.ui.textEdit.hasFocus():
+                self.send()
+                return True
+        return False
+
     def close_sockets(self):
         self.client_socket.close()
 

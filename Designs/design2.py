@@ -27,6 +27,7 @@ class Ui_MainWindow(object):
         self.label.setAutoFillBackground(True)
         self.label.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label.setObjectName("label")
+        self.label.setWordWrap(True)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
