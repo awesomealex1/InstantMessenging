@@ -1,2 +1,4 @@
 .venv
 .vscode
+.pylintrc
+Designs/__pycache__
