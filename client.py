@@ -44,6 +44,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def send(self):
         msg = self.ui.textEdit.toPlainText()
         self.client_socket.send(bytes(msg, "utf8"))
+        self.ui.textEdit.setText("")
     
     def close_sockets(self):
         self.client_socket.close()
