@@ -38,6 +38,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         while True:
             try:
                 msg = self.client_socket.recv(self.BUFSIZ).decode("utf8")
+                print(msg)
                 prev_text = self.ui.label.text()
                 self.ui.label.setText(prev_text + "\n" + msg)
             except OSError:  # Possibly client has left the chat.
