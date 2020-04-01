@@ -39,11 +39,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.receive_thread.start()
 
     def add_msg(self, msg):
-        prev_text = self.ui.textEdit_2.toPlainText()
-        if prev_text != "":
-            self.ui.textEdit_2.setText(prev_text + "\n" + msg)
-        else:
-            self.ui.textEdit_2.setText(msg)
+        self.ui.textEdit_2.append(msg)
+
     def receive(self):
         """Handles receiving of messages."""
         while True:
