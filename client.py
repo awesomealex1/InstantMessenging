@@ -2,13 +2,16 @@ from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
-from Designs.design2 import Ui_MainWindow
-from PyQt5.QtCore import Qt
+from Designs.design3 import Ui_MainWindow
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5 import QtCore
 import sys
 
 
 class ApplicationWindow(QtWidgets.QMainWindow):
+
+    trigger = pyqtSignal(str)
+
     def __init__(self):
         super(ApplicationWindow, self).__init__()
 
@@ -26,6 +29,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         else:
             self.PORT = int(self.PORT)
 
+        self.trigger.connect(self.add_msg)
+
         self.BUFSIZ = 1024
         self.ADDR = (self.HOST, self.PORT)
         self.client_socket = socket(AF_INET, SOCK_STREAM)
@@ -33,14 +38,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.receive_thread = Thread(target=self.receive)
         self.receive_thread.start()
 
+    def add_msg(self, msg):
+        prev_text = self.ui.textEdit_2.toPlainText()
+        if prev_text != "":
+            self.ui.textEdit_2.setText(prev_text + "\n" + msg)
+        else:
+            self.ui.textEdit_2.setText(msg)
     def receive(self):
         """Handles receiving of messages."""
         while True:
             try:
                 msg = self.client_socket.recv(self.BUFSIZ).decode("utf8")
-                print(msg)
-                prev_text = self.ui.label.text()
-                self.ui.label.setText(prev_text + "\n" + msg)
+                self.trigger.emit(msg)
             except OSError:  # Possibly client has left the chat.
                 break
 
