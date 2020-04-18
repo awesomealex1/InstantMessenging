@@ -38,11 +38,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.receive_thread = Thread(target=self.receive)
         self.receive_thread.start()
 
-    def add_msg(self, msg):
+    def add_msg(self, msg): #Adds message to textbox
         self.ui.textEdit_2.append(msg)
 
-    def receive(self):
-        """Handles receiving of messages."""
+    def receive(self):  #Receives messages from server
         while True:
             try:
                 msg = self.client_socket.recv(self.BUFSIZ).decode("utf8")
@@ -50,12 +49,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             except OSError:  # Possibly client has left the chat.
                 break
 
-    def send(self):
+    def send(self): #Sends messages to server
         msg = self.ui.textEdit.toPlainText()
         self.client_socket.send(bytes(msg, "utf8"))
         self.ui.textEdit.setText("")
     
-    def eventFilter(self, obj, event):
+    def eventFilter(self, obj, event):  #Makes it possible to use enter to send a message
         if event.type() == QtCore.QEvent.KeyPress and obj is self.ui.textEdit:
             if (event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter) and self.ui.textEdit.hasFocus():
                 self.send()
